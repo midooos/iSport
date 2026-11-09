@@ -1,0 +1,16 @@
+# Base PostgreSQL pour le développement en local
+services:
+  db:
+    image: postgres:16
+    container_name: isport-db
+    environment:
+      POSTGRES_DB: isport
+      POSTGRES_USER: isport
+      POSTGRES_PASSWORD: isport
+    ports:
+      - "5432:5432"
+    volumes:
+      - isport-data:/var/lib/postgresql/data
+
+volumes:
+  isport-data:
