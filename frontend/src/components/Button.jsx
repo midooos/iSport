@@ -1,12 +1,28 @@
-export default function Button({
-  variant = "primary",
-  type = "button",
-  children,
-  ...rest
-}) {
-  return (
-    <button type={type} className={`btn btn--${variant}`} {...rest}>
-      {children}
-    </button>
-  );
+
+function Button(props) {
+
+    let variant = props.variant;
+    let type = props.type;
+
+    if (variant === undefined) {
+        variant = "primary";
+    }
+
+    if (type === undefined) {
+        type = "button";
+    }
+
+    return (
+        <button
+            type={type}
+            className={"btn btn--" + variant}
+            onClick={props.onClick}
+            disabled={props.disabled}
+        >
+            {props.children}
+        </button>
+    );
 }
+
+export default Button;
+
