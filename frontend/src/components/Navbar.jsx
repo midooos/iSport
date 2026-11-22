@@ -1,36 +1,63 @@
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth.js";
+import Button from "./Button.jsx";
 
-function Navbar() {
+export default function Navbar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-    return (
-        <header className="navbar">
+  function handleLogout() {
+    logout();
+    navigate("/login");
+  }
 
-            <div className="navbar__inner">
+  return (
+    <header className="navbar">
+      <div className="navbar__inner">
 
-                <NavLink to="/" className="navbar__brand">
-                    iSport
-                </NavLink>
+        <NavLink to="/" className="navbar__brand">
+          iSport
+        </NavLink>
 
-                <nav className="navbar__links">
+        <nav className="navbar__links">
+          <NavLink to="/" end>
+            Événements
+          </NavLink>
 
-                    <NavLink to="/" end>
-                        Événements
-                    </NavLink>
+          <NavLink to="/events/new">
+            Créer un événement
+          </NavLink>
+        </nav>
 
-                    <NavLink to="/events/new">
-                        Créer un événement
-                    </NavLink>
+        <div className="navbar__auth">
+          {user ? (
+            <>
+              <NavLink to="/profile">
+                {user.login}
+              </NavLink>
 
-                </nav>
+              <Button
+                variant="secondary"
+                onClick={handleLogout}
+              >
+                Se déconnecter
+              </Button>
+            </>
+          ) : (
+            <>
+              <NavLink to="/login">
+                Connexion
+              </NavLink>
 
-                <div className="navbar__auth">
-                </div>
+              <NavLink to="/register" className="navbar__cta">
+                Inscription
+              </NavLink>
+            </>
+          )}
+        </div>
 
-            </div>
-
-        </header>
-    );
+      </div>
+    </header>
+  );
 }
-
-export default Navbar;

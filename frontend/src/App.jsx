@@ -1,7 +1,12 @@
 import { Routes, Route, Link } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import AuthProvider from "./context/AuthProvider.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import CreateEvent from "./pages/CreateEvent.jsx";
+import Login from "./pages/Login.jsx";
+import Profile from "./pages/Profile.jsx";
+import Register from "./pages/Register.jsx";
 
 function NotFound() {
   return (
@@ -15,12 +20,31 @@ function NotFound() {
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="events/new" element={<CreateEvent />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route
+            path="events/new"
+            element={
+              <ProtectedRoute>
+                <CreateEvent />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </AuthProvider>
   );
 }
