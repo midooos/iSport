@@ -1,25 +1,23 @@
 // Toutes les requêtes vers le back passent par ce fichier
 
-/*export async function getHealth() {
-  const response = await fetch('/api/health')
-  if (!response.ok) {
-    throw new Error('Le back ne répond pas')
-  }
-  return response.json()
-*/
+
+
+const TOKEN_KEY = "isport_token";
 
 export async function getHealth() {
+  const response = await fetch("/api/health");
 
-    const response = await fetch("/api/health");
+  if (!response.ok) {
+    throw new Error("Le back ne répond pas");
+  }
 
-    if (response.ok === true) {
-        const data = await response.json();
-        return data;
-    } 
-    else {
-        throw new Error("Le back ne répond pas");
-    }
-
+  return response.json();
 }
 
-
+export function getToken() {
+  try {
+    return localStorage.getItem(TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
