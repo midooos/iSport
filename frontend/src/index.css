@@ -331,3 +331,64 @@ a {
   gap: 1rem;
   justify-items: start;
 }
+/* Authentification (inscription, connexion, profil) */
+.navbar__auth {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.navbar__auth a {
+  color: var(--ink-soft);
+  font-weight: 600;
+  text-decoration: none;
+}
+.navbar__auth a:hover,
+.navbar__auth a.active {
+  color: var(--ink);
+}
+.navbar__auth a.navbar__cta,
+.navbar__auth a.navbar__cta:hover,
+.navbar__auth a.navbar__cta.active {
+  color: var(--paper);
+}
+.navbar__auth .navbar__cta {
+  background: var(--court);
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-s);
+}
+.navbar__auth .navbar__cta:hover {
+  background: var(--court-dark);
+}
+.navbar__auth .btn {
+  padding: 0.4rem 0.9rem;
+}
+.notice {
+  background: var(--turf-bg);
+  color: var(--turf);
+  font-weight: 600;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-s);
+}
+.auth-switch {
+  margin-top: 1.5rem;
+  color: var(--ink-soft);
+}
+.profile {
+  max-width: 560px;
+  padding: 1.25rem 1.5rem;
+}
+.profile dl {
+  margin: 0;
+}
+.profile dt {
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  margin-top: 1rem;
+}
+.profile dt:first-child {
+  margin-top: 0;
+}
+.profile dd {
+  margin: 0.15rem 0 0;
+  font-weight: 600;
+}
