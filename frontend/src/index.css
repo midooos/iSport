@@ -1,19 +1,4 @@
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #222;
-}
 
-nav {
-  display: flex;
-  gap: 16px;
-  padding: 12px 24px;
-  border-bottom: 1px solid #ccc;
-}
-
-main {
-  padding: 24px;
-}
 :root {
   --chalk: #f2f4f0;
   --paper: #ffffff;
@@ -35,6 +20,7 @@ main {
   --page-width: 860px;
 }
 
+/* General */
 *,
 *::before,
 *::after {
@@ -76,6 +62,7 @@ a {
   outline-offset: 2px;
 }
 
+/* Skip link */
 .skip-link {
   position: absolute;
   left: 1rem;
@@ -86,6 +73,7 @@ a {
   border-radius: var(--radius-s);
   z-index: 10;
 }
+
 .skip-link:focus {
   top: 1rem;
 }
@@ -98,6 +86,7 @@ a {
   top: 0;
   z-index: 5;
 }
+
 .navbar__inner {
   max-width: var(--page-width);
   margin: 0 auto;
@@ -107,6 +96,7 @@ a {
   align-items: center;
   gap: 0.5rem 1.75rem;
 }
+
 .navbar__brand {
   font-family: var(--font-display);
   font-weight: 800;
@@ -115,12 +105,14 @@ a {
   color: var(--ink);
   text-decoration: none;
 }
+
 .navbar__links {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem 1.25rem;
   flex: 1;
 }
+
 .navbar__links a {
   color: var(--ink-soft);
   font-weight: 600;
@@ -128,9 +120,11 @@ a {
   padding: 0.25rem 0;
   border-bottom: 3px solid transparent;
 }
+
 .navbar__links a:hover {
   color: var(--ink);
 }
+
 .navbar__links a.active {
   color: var(--ink);
   border-bottom-color: var(--court);
@@ -142,9 +136,11 @@ a {
   margin: 0 auto;
   padding: 2rem 1.25rem 4rem;
 }
+
 .page__header {
   margin-bottom: 1.75rem;
 }
+
 .page__header p {
   margin-top: 0.5rem;
   color: var(--ink-soft);
@@ -160,21 +156,26 @@ a {
   border: 2px solid var(--court);
   transition: background-color 0.15s;
 }
+
 .btn--primary {
   background: var(--court);
   color: var(--paper);
 }
+
 .btn--primary:hover {
   background: var(--court-dark);
   border-color: var(--court-dark);
 }
+
 .btn--secondary {
   background: transparent;
   color: var(--court);
 }
+
 .btn--secondary:hover {
   background: var(--paper);
 }
+
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -186,18 +187,22 @@ a {
   gap: 1.25rem;
   max-width: 560px;
 }
+
 .form__row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
+
 .field {
   display: grid;
   gap: 0.35rem;
 }
+
 .field label {
   font-weight: 600;
 }
+
 .field input,
 .field select {
   font: inherit;
@@ -208,18 +213,22 @@ a {
   color: var(--ink);
   width: 100%;
 }
+
 .field input:hover,
 .field select:hover {
   border-color: var(--ink-soft);
 }
+
 .field--error input,
 .field--error select {
   border-color: var(--ember);
 }
+
 .field__hint {
   font-size: 0.9375rem;
   color: var(--ink-soft);
 }
+
 .field__error {
   font-size: 0.9375rem;
   color: var(--ember);
@@ -232,6 +241,7 @@ a {
   border: 2px solid var(--ink);
   border-radius: var(--radius-m);
 }
+
 .badge {
   display: inline-block;
   font-size: 0.9375rem;
@@ -240,14 +250,17 @@ a {
   border-radius: 999px;
   white-space: nowrap;
 }
+
 .badge--open {
   background: var(--turf-bg);
   color: var(--turf);
 }
+
 .badge--full {
   background: var(--ember-bg);
   color: var(--ember);
 }
+
 .badge--neutral {
   background: var(--line);
   color: var(--ink);
@@ -261,6 +274,7 @@ a {
   display: grid;
   gap: 1rem;
 }
+
 .event {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -268,6 +282,7 @@ a {
   gap: 1.25rem;
   padding: 1rem 1.25rem 1rem 1rem;
 }
+
 .event__date {
   display: grid;
   justify-items: center;
@@ -277,44 +292,31 @@ a {
   color: var(--paper);
   border-radius: var(--radius-s);
 }
+
 .event__day {
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 1.75rem;
   line-height: 1;
 }
+
 .event__month {
   font-size: 0.9375rem;
   margin-top: 0.15rem;
 }
+
 .event__title {
   font-size: 1.25rem;
   font-weight: 700;
 }
+
 .event__sport {
   font-weight: 600;
   color: var(--court);
 }
+
 .event__place {
   color: var(--ink-soft);
-}
-
-@media (max-width: 560px) {
-  .event {
-    grid-template-columns: auto 1fr;
-  }
-  .event__status {
-    grid-column: 1 / -1;
-  }
-  .form__row {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-  }
 }
 
 /* Recherche par sport */
@@ -322,46 +324,67 @@ a {
   max-width: 420px;
   margin-bottom: 1.25rem;
 }
+
 .search__count {
   color: var(--ink-soft);
   margin-bottom: 1rem;
 }
+
 .search__empty {
   display: grid;
   gap: 1rem;
   justify-items: start;
 }
-/* Authentification (inscription, connexion, profil) */
+
+/* Actions Rejoindre / Quitter */
+.event__status {
+  display: grid;
+  gap: 0.6rem;
+  justify-items: end;
+}
+
+.action-error {
+  margin-bottom: 1rem;
+}
+
+/* Authentification */
 .navbar__auth {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
+
 .navbar__auth a {
   color: var(--ink-soft);
   font-weight: 600;
   text-decoration: none;
 }
+
 .navbar__auth a:hover,
 .navbar__auth a.active {
   color: var(--ink);
 }
+
 .navbar__auth a.navbar__cta,
 .navbar__auth a.navbar__cta:hover,
 .navbar__auth a.navbar__cta.active {
   color: var(--paper);
 }
+
 .navbar__auth .navbar__cta {
   background: var(--court);
   padding: 0.45rem 1rem;
   border-radius: var(--radius-s);
 }
+
 .navbar__auth .navbar__cta:hover {
   background: var(--court-dark);
 }
+
 .navbar__auth .btn {
   padding: 0.4rem 0.9rem;
 }
+
 .notice {
   background: var(--turf-bg);
   color: var(--turf);
@@ -369,26 +392,55 @@ a {
   padding: 0.65rem 0.75rem;
   border-radius: var(--radius-s);
 }
+
 .auth-switch {
   margin-top: 1.5rem;
   color: var(--ink-soft);
 }
+
 .profile {
   max-width: 560px;
   padding: 1.25rem 1.5rem;
 }
+
 .profile dl {
   margin: 0;
 }
+
 .profile dt {
   color: var(--ink-soft);
   font-size: 0.9375rem;
   margin-top: 1rem;
 }
+
 .profile dt:first-child {
   margin-top: 0;
 }
+
 .profile dd {
   margin: 0.15rem 0 0;
   font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 560px) {
+  .event {
+    grid-template-columns: auto 1fr;
+  }
+
+  .event__status {
+    grid-column: 1 / -1;
+    justify-items: start;
+  }
+
+  .form__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }
