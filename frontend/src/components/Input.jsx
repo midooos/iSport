@@ -1,41 +1,57 @@
-export default function Input({
-  label,
-  id,
-  error,
-  hint,
-  as = "input",
-  children,
-  ...rest
-}) {
-  const hintId = hint ? `${id}-hint` : undefined;
-  const errorId = error ? `${id}-error` : undefined;
-  const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
 
-  const common = {
-    id,
-    "aria-invalid": error ? "true" : undefined,
-    "aria-describedby": describedBy,
-    ...rest,
-  };
+function Input(props) {
 
-  return (
-    <div className={`field${error ? " field--error" : ""}`}>
-      <label htmlFor={id}>{label}</label>
-      {as === "select" ? (
-        <select {...common}>{children}</select>
-      ) : (
-        <input {...common} />
-      )}
-      {hint && (
-        <p id={hintId} className="field__hint">
-          {hint}
-        </p>
-      )}
-      {error && (
-        <p id={errorId} className="field__error" role="alert">
-          {error}
-        </p>
-      )}
-    </div>
-  );
+    let champ;
+
+    if (props.as === "select") {
+        champ = (
+            <select
+                id={props.id}
+                name={props.name}
+                value={props.value}
+                onChange={props.onChange}
+            >
+                {props.children}
+            </select>
+        );
+    } 
+    else {
+        champ = (
+            <input
+                id={props.id}
+                type={props.type}
+                name={props.name}
+                value={props.value}
+                placeholder={props.placeholder}
+                onChange={props.onChange}
+            />
+        );
+    }
+
+    return (
+        <div className="field">
+
+            <label htmlFor={props.id}>
+                {props.label}
+            </label>
+
+            {champ}
+
+            {props.hint && (
+                <p className="field__hint">
+                    {props.hint}
+                </p>
+            )}
+
+            {props.error && (
+                <p className="field__error" role="alert">
+                    {props.error}
+                </p>
+            )}
+
+        </div>
+    );
 }
+
+export default Input;
+

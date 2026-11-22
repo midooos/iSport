@@ -1,7 +1,19 @@
-export default function Card({ as: Tag = "article", className = "", children, ...rest }) {
-  return (
-    <Tag className={`card ${className}`.trim()} {...rest}>
-      {children}
-    </Tag>
-  );
+
+
+function Card(props) {
+
+    let className = "card";
+
+    if (props.className !== undefined && props.className !== "") {
+        className = "card " + props.className;
+    }
+
+    return (
+        <article className={className}>
+            {props.children}
+        </article>
+    );
 }
+
+export default Card;
+

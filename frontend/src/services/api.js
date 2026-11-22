@@ -1,82 +1,100 @@
-// Toutes les requêtes vers le back passent par ce fichier
 
-const TOKEN_KEY = 'isport_token'
+const TOKEN_KEY = "isport_token";
 
-export function getToken() {
-  try {
-    return localStorage.getItem(TOKEN_KEY)
-  } catch {
-    return null
-  }
-}
-
-export function setToken(token) {
-  try {
-    localStorage.setItem(TOKEN_KEY, token)
-  } catch {
-    // stockage indisponible : l'utilisateur devra se reconnecter
-  }
-}
-
-export function clearToken() {
-  try {
-    localStorage.removeItem(TOKEN_KEY)
-  } catch {
-    // rien à faire
-  }
-}
-
-// Erreur avec le code HTTP et le message renvoyé par le back ({ "message": "..." })
-export class ApiError extends Error {
-  constructor(status, message) {
-    super(message)
-    this.status = status
-  }
-}
-
-async function request(path, { method = 'GET', body } = {}) {
-  const headers = { 'Content-Type': 'application/json' }
-  const token = getToken()
-  if (token) {
-    headers.Authorization = `Bearer ${token}`
-  }
-
-  let response
-  try {
-    response = await fetch(path, {
-      method,
-      headers,
-      body: body ? JSON.stringify(body) : undefined,
-    })
-  } catch {
-    throw new ApiError(0, 'Le serveur ne répond pas, réessayez plus tard')
-  }
-
-  let data = null
-  try {
-    data = await response.json()
-  } catch {
-    // réponse sans corps JSON
-  }
+// Vérifier si le backend répond
+export async function getHealth() {
+  const response = await fetch("/api/health");
 
   if (!response.ok) {
-    throw new ApiError(response.status, data?.message || 'Une erreur est survenue')
+    throw new Error("Le back ne répond pas");
   }
-  return data
+
+  return response.json();
 }
 
-export function getHealth() {
-  return request('/api/health')
+// Récupérer le token
+export function getToken() {
+  try {
+    return localStorage.getItem(TOKEN_KEY);
+  } catch {
+    return null;
+  }
 }
 
-export function register(values) {
-  return request('/api/auth/register', { method: 'POST', body: values })
+// Enregistrer le token
+export function setToken(token) {
+  try {
+    localStorage.setItem(TOKEN_KEY, token);
+  } catch {
+    // Le stockage peut être indisponible
+  }
 }
 
-export function login(values) {
-  return request('/api/auth/login', { method: 'POST', body: values })
+// Supprimer le token
+export function clearToken() {
+  try {
+    localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    // Le stockage peut être indisponible
+  }
 }
 
-export function getMe() {
-  return request('/api/users/me')
+// Connexion
+export async function login({ email, password }) {
+  const response = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors de la connexion");
+  }
+
+  return data;
+}
+
+// Inscription
+export async function register({ login, email, password }) {
+  const response = await fetch("/api/auth/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ login, email, password }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Erreur lors de l'inscription");
+  }
+
+  return data;
+}
+
+// Récupérer le profil de l'utilisateur connecté
+export async function getMe() {
+  const response = await fetch("/api/auth/me", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const error = new Error(
+      data.message || "Impossible de récupérer le profil"
+    );
+    error.status = response.status;
+    throw error;
+  }
+
+  return data;
 }
