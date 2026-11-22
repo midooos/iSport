@@ -1,3 +1,5 @@
+import { getToken } from "./api.js";
+
 const USE_MOCK = true; // passer à false quand KAN-51 (GET) et KAN-48 (POST) sont terminés
 
 const MOCK_EVENTS = [
@@ -51,8 +53,8 @@ export async function createEvent(values) {
     return payload;
   }
 
-  // La clé "token" est à confirmer avec yessine (KAN-42)
-  const token = localStorage.getItem("token");
+  // Le token est gardé par la connexion (KAN-42)
+  const token = getToken();
   const response = await fetch("/api/events", {
     method: "POST",
     headers: {
