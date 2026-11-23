@@ -79,7 +79,7 @@ export async function register({ login, email, password }) {
 
 // Récupérer le profil de l'utilisateur connecté
 export async function getMe() {
-  const response = await fetch("/api/auth/me", {
+  const response = await fetch("/api/users/me", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${getToken()}`,
