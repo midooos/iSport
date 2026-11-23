@@ -1,7 +1,9 @@
 
 import { getToken } from "./api.js";
 
-// Utiliser les données de test pour le moment
+// Données de test pour la création, l'inscription et la désinscription,
+// tant que ces routes n'existent pas encore côté back.
+// La liste des événements (avec le filtre par sport) utilise déjà le vrai back.
 const USE_MOCK = true;
 
 // ======================================
@@ -55,16 +57,19 @@ const MOCK_EVENTS = [
 // 2. TRANSFORMER LES DONNEES DU BACKEND
 // ======================================
 
+// Le back renvoie l'objet événement du contrat d'API (docs/api-contract.md) :
+// { id, title, sport, date, time, location, maxParticipants, participantsCount, status, organizer, joined }
+// On le transforme dans le format utilisé par les pages du front.
 function toEvent(event) {
     return {
         id: event.id,
         title: event.title,
         sport: event.sport,
-        place: event.place,
-        startsAt: event.startsAt,
-        joined: event.joined ?? 0,
+        place: event.location,
+        startsAt: event.date + "T" + event.time,
+        joined: event.participantsCount ?? 0,
         max: event.maxParticipants,
-        joinedByMe: event.joinedByMe ?? false
+        joinedByMe: event.joined ?? false
     };
 }
 
@@ -100,25 +105,26 @@ function wait(milliseconds) {
 // 5. RECUPERER LES EVENEMENTS
 // ======================================
 
-export async function fetchUpcomingEvents() {
-    if (USE_MOCK === true) {
-        await wait(400);
+// GET /api/events : événements à venir, triés par date
+// GET /api/events?sport=Football : seulement ceux de ce sport
+// Si sport est vide, tous les sports sont renvoyés.
+export async function fetchUpcomingEvents(sport) {
+    let url = "/api/events";
 
-        const events = [];
-
-        for (let i = 0; i < MOCK_EVENTS.length; i++) {
-            events.push({ ...MOCK_EVENTS[i] });
-        }
-
-        return events;
+    if (sport !== undefined && sport !== "") {
+        url = url + "?sport=" + encodeURIComponent(sport);
     }
 
-    const response = await fetch("/api/events", {
+    const response = await fetch(url, {
         headers: authHeaders()
     });
 
+    if (response.status === 401) {
+        throw new Error("Connecte-toi pour voir les événements.");
+    }
+
     if (!response.ok) {
-        throw new Error("Impossible de charger les événements.");
+        throw new Error("Impossible de charger les événements. Réessaie dans un instant.");
     }
 
     const data = await response.json();
