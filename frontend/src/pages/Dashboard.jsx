@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Card from "../components/Card.jsx";
 import Badge from "../components/Badge.jsx";
@@ -14,23 +14,7 @@ import {
     leaveEvent
 } from "../services/eventApi.js";
 
-
-// ======================================
-// 1. FONCTION POUR NORMALISER LE TEXTE
-// ======================================
-
-function normalize(text) {
-
-    let result = text.normalize("NFD");
-
-    result = result.replace(/[\u0300-\u036f]/g, "");
-
-    result = result.toLowerCase();
-
-    result = result.trim();
-
-    return result;
-}
+import { SPORTS } from "../utils/sports.js";
 
 
 // ======================================
@@ -180,8 +164,11 @@ function Dashboard() {
     // L'état du chargement
     const [status, setStatus] = useState("loading");
 
-    // Le texte recherché
-    const [query, setQuery] = useState("");
+    // Le sport choisi dans le filtre ("" = tous les sports)
+    const [sport, setSport] = useState("");
+
+    // Message d'erreur de chargement
+    const [loadError, setLoadError] = useState("");
 
     // ID de l'événement en cours de modification
     const [pendingId, setPendingId] = useState(null);
@@ -191,66 +178,62 @@ function Dashboard() {
 
 
     // ======================================
-    // 4. RECUPERER LES EVENEMENTS
+    // 4. RECUPERER LES EVENEMENTS (FILTRES PAR SPORT)
     // ======================================
 
-    async function getEvents() {
-
-        try {
-
-            const data = await fetchUpcomingEvents();
-
-            setEvents(data);
-
-            setStatus("ready");
-
-        }
-        catch (error) {
-
-            setStatus("error");
-
-            console.log(error);
-
-        }
-
-    }
-
-
+    // Rechargé à chaque changement de sport : le filtre est fait par le back
+    // (GET /api/events?sport=...)
     useEffect(function() {
+
+        // Si l'utilisateur change de sport avant la fin du chargement,
+        // on ignore l'ancienne réponse pour ne pas afficher la mauvaise liste
+        let ignore = false;
+
+        async function getEvents() {
+
+            setStatus("loading");
+
+            try {
+
+                const data = await fetchUpcomingEvents(sport);
+
+                if (ignore === false) {
+
+                    setEvents(data);
+
+                    setStatus("ready");
+
+                }
+
+            }
+            catch (error) {
+
+                if (ignore === false) {
+
+                    setLoadError(error.message);
+
+                    setStatus("error");
+
+                }
+
+            }
+
+        }
 
         getEvents();
 
-    }, []);
+        return function() {
+            ignore = true;
+        };
+
+    }, [sport]);
 
 
-    // ======================================
-    // 5. RECHERCHER UN SPORT
-    // ======================================
+    // Vérifier si un sport est choisi
+    let isFiltering = false;
 
-    const filtered = [];
-
-    const search = normalize(query);
-
-    for (let i = 0; i < events.length; i++) {
-
-        const event = events[i];
-
-        const sport = normalize(event.sport);
-
-        if (sport.includes(search)) {
-
-            filtered.push(event);
-
-        }
-
-    }
-
-
-    // Vérifier si l'utilisateur fait une recherche
-    let isSearching = false;
-
-    if (query.trim() !== "") {
-        isSearching = true;
+    if (sport !== "") {
+        isFiltering = true;
     }
 
 
@@ -347,20 +330,41 @@ function Dashboard() {
             </header>
 
 
-            {/* Barre de recherche */}
+            {/* Filtre par sport */}
 
             <div className="search">
 
                 <Input
-                    label="Rechercher par sport"
-                    id="search"
-                    type="search"
-                    value={query}
+                    as="select"
+                    label="Filtrer par sport"
+                    id="sport-filter"
+                    name="sport"
+                    value={sport}
                     onChange={function(event) {
-                        setQuery(event.target.value);
+                        setSport(event.target.value);
                     }}
-                    placeholder="Football, padel, running..."
-                />
+                >
+
+                    <option value="">
+                        Tous les sports
+                    </option>
+
+                    {SPORTS.map(function(sportName) {
+
+                        return (
+
+                            <option
+                                key={sportName}
+                                value={sportName}
+                            >
+                                {sportName}
+                            </option>
+
+                        );
+
+                    })}
+
+                </Input>
 
             </div>
 
@@ -392,16 +396,15 @@ function Dashboard() {
             {status === "error" && (
 
                 <p role="alert">
-                    Impossible de charger les événements.
-                    Réessaie dans un instant.
+                    {loadError}
                 </p>
 
             )}
 
 
-            {/* Vérifier si la liste est vide */}
+            {/* Aucun événement du tout */}
 
-            {status === "ready" && events.length === 0 && (
+            {status === "ready" && events.length === 0 && isFiltering === false && (
 
                 <p>
                     Aucun événement à venir.
@@ -415,6 +418,30 @@ function Dashboard() {
             )}
 
 
+            {/* Aucun événement pour le sport choisi */}
+
+            {status === "ready" && events.length === 0 && isFiltering === true && (
+
+                <div className="search__empty">
+
+                    <p>
+                        Aucun événement à venir pour ce sport.
+                    </p>
+
+                    <Button
+                        variant="secondary"
+                        onClick={function() {
+                            setSport("");
+                        }}
+                    >
+                        Voir tous les sports
+                    </Button>
+
+                </div>
+
+            )}
+
+
             {/* Afficher les événements */}
 
             {status === "ready" && events.length > 0 && (
@@ -423,71 +450,46 @@ function Dashboard() {
 
                     <p className="search__count">
 
-                        {filtered.length}
+                        {events.length}
 
-                        {filtered.length > 1
+                        {events.length > 1
                             ? " événements"
                             : " événement"}
 
-                        {isSearching === true
-                            ? " pour " + query.trim()
+                        {isFiltering === true
+                            ? " pour " + sport
                             : ""}
 
                     </p>
 
 
-                    {/* Aucun résultat trouvé */}
+                    {/* Afficher les cartes */}
 
-                    {filtered.length === 0 ? (
+                    <ul className="event-list">
 
-                        <div className="search__empty">
+                        {events.map(function(event) {
 
-                            <p>
-                                Aucun événement ne correspond à ce sport.
-                            </p>
+                            return (
 
-                            <Button
-                                variant="secondary"
-                                onClick={function() {
-                                    setQuery("");
-                                }}
-                            >
-                                Effacer la recherche
-                            </Button>
+                                <li key={event.id}>
 
-                        </div>
+                                    <EventCard
+                                        event={event}
 
-                    ) : (
+                                        pending={pendingId === event.id}
 
-                        /* Afficher les cartes */
+                                        onJoin={handleJoin}
 
-                        <ul className="event-list">
+                                        onLeave={handleLeave}
+                                    />
 
-                            {filtered.map(function(event) {
+                                </li>
 
-                                return (
+                            );
 
-                                    <li key={event.id}>
+                        })}
 
-                                        <EventCard
-                                            event={event}
-
-                                            pending={pendingId === event.id}
-
-                                            onJoin={handleJoin}
-
-                                            onLeave={handleLeave}
-                                        />
-
-                                    </li>
-
-                                );
-
-                            })}
-
-                        </ul>
-
-                    )}
+                    </ul>
 
                 </>
 
