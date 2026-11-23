@@ -13,6 +13,7 @@ import com.isport.entity.Event;
 import com.isport.entity.User;
 import com.isport.exception.ApiException;
 import com.isport.repository.EventRepository;
+import com.isport.repository.EventSummary;
 import com.isport.repository.UserRepository;
 
 @Service
@@ -53,15 +54,16 @@ public class EventService {
     public List<EventResponse> findUpcoming(String sport, Long currentUserId) {
         LocalDateTime now = LocalDateTime.now();
 
-        List<Event> events;
+        // Une seule requête SQL, quel que soit le nombre d'événements et de participants
+        List<EventSummary> rows;
         if (sport == null || sport.isBlank()) {
-            events = eventRepository.findByStartsAtGreaterThanEqualOrderByStartsAtAsc(now);
+            rows = eventRepository.findUpcoming(now, currentUserId);
         } else {
-            events = eventRepository.findBySportIgnoreCaseAndStartsAtGreaterThanEqualOrderByStartsAtAsc(sport.trim(), now);
+            rows = eventRepository.findUpcomingBySport(Event.toSportKey(sport), now, currentUserId);
         }
 
-        return events.stream()
-            .map(event -> EventResponse.from(event, currentUserId))
+        return rows.stream()
+            .map(EventResponse::from)
             .toList();
     }
 }
