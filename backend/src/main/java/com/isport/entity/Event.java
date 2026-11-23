@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -15,10 +16,19 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
+// Index pour la liste du dashboard (GET /api/events) :
+// - starts_at : « à venir » (starts_at >= maintenant) + tri par date
+// - (sport_key, starts_at) : filtre par sport + tri par date, en un seul parcours d'index
+// - organizer_id : clé étrangère (PostgreSQL ne l'indexe pas tout seul)
 @Entity
-@Table(name = "events")
+@Table(name = "events", indexes = {
+    @Index(name = "idx_events_starts_at", columnList = "starts_at"),
+    @Index(name = "idx_events_sport_key_starts_at", columnList = "sport_key, starts_at"),
+    @Index(name = "idx_events_organizer_id", columnList = "organizer_id")
+})
 public class Event {
 
     @Id
@@ -30,6 +40,11 @@ public class Event {
 
     @Column(nullable = false, length = 50)
     private String sport;
+
+    // Sport en minuscules, pour filtrer sans tenir compte des majuscules tout en utilisant un index
+    // (un « upper(sport) = upper(?) » ne peut pas utiliser un index classique)
+    @Column(name = "sport_key", length = 50)
+    private String sportKey;
 
     // Date et heure de l'événement en un seul champ (le front envoie « startsAt »)
     @Column(name = "starts_at", nullable = false)
@@ -50,11 +65,14 @@ public class Event {
     private User organizer;
 
     // Utilisateurs inscrits à l'événement
+    // La clé primaire (event_id, user_id) sert au comptage des participants et à « joined » ;
+    // l'index (user_id, event_id) sert à retrouver les événements d'un utilisateur
     @ManyToMany
     @JoinTable(
         name = "event_participants",
         joinColumns = @JoinColumn(name = "event_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id"))
+        inverseJoinColumns = @JoinColumn(name = "user_id"),
+        indexes = @Index(name = "idx_event_participants_user_id", columnList = "user_id, event_id"))
     private Set<User> participants = new HashSet<>();
 
     protected Event() {
@@ -63,7 +81,7 @@ public class Event {
 
     public Event(String title, String sport, LocalDateTime startsAt, String place, int maxParticipants) {
         this.title = title;
-        this.sport = sport;
+        setSport(sport);
         this.startsAt = startsAt;
         this.place = place;
         this.maxParticipants = maxParticipants;
@@ -80,7 +98,14 @@ public class Event {
     public void setTitle(String title) { this.title = title; }
 
     public String getSport() { return sport; }
-    public void setSport(String sport) { this.sport = sport; }
+    public void setSport(String sport) {
+        this.sport = sport;
+        this.sportKey = toSportKey(sport);
+    }
+
+    public static String toSportKey(String sport) {
+        return sport == null ? null : sport.trim().toLowerCase(Locale.ROOT);
+    }
 
     public LocalDateTime getStartsAt() { return startsAt; }
     public void setStartsAt(LocalDateTime startsAt) { this.startsAt = startsAt; }
