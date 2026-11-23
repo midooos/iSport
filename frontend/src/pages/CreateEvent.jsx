@@ -3,20 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Input from "../components/Input.jsx";
 import Button from "../components/Button.jsx";
 import { createEvent } from "../services/eventApi.js";
-
-
-
-
-// Liste des sports
-const SPORTS = [
-    "Football",
-    "Basketball",
-    "Volley-ball",
-    "Tennis",
-    "Padel",
-    "Running",
-    "Autre"
-];
+import { SPORTS } from "../utils/sports.js";
 
 
 function CreateEvent() {
