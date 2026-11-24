@@ -29,7 +29,9 @@ export default function Profile() {
       <Card as="section" className="profile">
         <div className="profile__header">
           <span className="profile__avatar" aria-hidden="true">
-            {user.login.slice(0, 1).toUpperCase()}
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.42 0-8 2.91-8 6.5V22h16v-1.5c0-3.59-3.58-6.5-8-6.5Z" />
+            </svg>
           </span>
           <div>
             <h2 className="profile__title">Mon compte</h2>
