@@ -178,6 +178,106 @@ a {
   color: rgb(255 255 255 / 78%);
 }
 
+.guest-home {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(250px, 0.7fr);
+  align-items: center;
+  gap: clamp(2.5rem, 7vw, 6rem);
+  min-height: max(430px, calc(100vh - 13rem));
+  padding: 3.5rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.guest-home__intro {
+  max-width: 640px;
+}
+
+.guest-home__eyebrow {
+  margin-bottom: 1rem;
+  color: var(--court);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guest-home__intro h1 {
+  max-width: 580px;
+  font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+  letter-spacing: -0.035em;
+}
+
+.guest-home__description {
+  max-width: 480px;
+  margin-top: 1rem;
+  color: var(--ink-soft);
+  font-size: 1.2rem;
+}
+
+.guest-home__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.guest-home__primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.7rem 1.25rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.15s, transform 0.15s;
+}
+
+.guest-home__primary:hover {
+  background: #e8b92d;
+  transform: translateY(-1px);
+}
+
+.guest-home__login {
+  color: var(--court-dark);
+  font-weight: 600;
+  text-underline-offset: 0.2em;
+}
+
+.guest-home__guide {
+  padding-left: 2rem;
+  border-left: 1px solid var(--line);
+}
+
+.guest-home__guide h2 {
+  margin-bottom: 0.75rem;
+  font-size: 1.15rem;
+}
+
+.guest-home__guide ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guest-home__guide li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.guest-home__guide li span {
+  color: var(--court);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
 .dashboard__header {
   display: flex;
   align-items: flex-end;
@@ -682,6 +782,27 @@ a {
     padding: 0 0 1.5rem;
     border-radius: 0;
     background: transparent;
+  }
+
+  .guest-home {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    min-height: auto;
+    padding: 2.5rem 0;
+  }
+
+  .guest-home__intro h1 {
+    font-size: clamp(2.6rem, 11vw, 3.5rem);
+  }
+
+  .guest-home__description {
+    font-size: 1.1rem;
+  }
+
+  .guest-home__guide {
+    padding: 1.5rem 0 0;
+    border-top: 1px solid var(--line);
+    border-left: 0;
   }
 
   .dashboard__header::after {
