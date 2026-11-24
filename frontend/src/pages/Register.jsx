@@ -46,9 +46,9 @@ export default function Register() {
   };
 
   return (
-    <>
+    <section className="auth-page" aria-labelledby="register-title">
       <header className="page__header auth-page__header">
-        <h1>Inscription</h1>
+        <h1 id="register-title">Inscription</h1>
         <p>Crée ton compte pour rejoindre des événements.</p>
       </header>
 
@@ -72,6 +72,6 @@ export default function Register() {
       <p className="auth-switch">
         Tu as déjà un compte ? <Link to="/login">Se connecter</Link>
       </p>
-    </>
+    </section>
   );
 }
