@@ -17,7 +17,8 @@ export default function Navbar() {
       <div className="navbar__inner">
 
         <NavLink to="/" className="navbar__brand">
-          iSport
+          <img className="navbar__brand-icon" src="/favicon.svg" alt="" />
+          <span>iSport</span>
         </NavLink>
 
         <nav className="navbar__links">
