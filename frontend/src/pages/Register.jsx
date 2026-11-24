@@ -59,7 +59,7 @@ export default function Register() {
           </p>
         )}
 
-        <Input label="Login" id="login" name="login" value={values.login} onChange={handleChange} error={errors.login} autoComplete="username" />
+        <Input label="Nom d'utilisateur" id="login" name="login" value={values.login} onChange={handleChange} error={errors.login} autoComplete="username" />
         <Input label="Email" id="email" name="email" type="email" value={values.email} onChange={handleChange} error={errors.email} autoComplete="email" />
         <Input label="Mot de passe" id="password" name="password" type="password" value={values.password} onChange={handleChange} error={errors.password} hint="8 caractères minimum." autoComplete="new-password" />
         <Input label="Confirmer le mot de passe" id="confirmPassword" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleChange} error={errors.confirmPassword} autoComplete="new-password" />
