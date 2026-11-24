@@ -178,6 +178,25 @@ a {
   color: rgb(255 255 255 / 78%);
 }
 
+.page__header.auth-page__header {
+  max-width: 560px;
+  margin-bottom: 1.25rem;
+  padding: 1.35rem 1.5rem;
+  border-radius: var(--radius-m);
+}
+
+.page__header.auth-page__header::after {
+  display: none;
+}
+
+.page__header.auth-page__header h1 {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+}
+
+.page__header.auth-page__header p {
+  margin-top: 0.4rem;
+}
+
 .guest-home {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(250px, 0.7fr);

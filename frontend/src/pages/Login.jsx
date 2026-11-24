@@ -42,7 +42,7 @@ export default function Login() {
 
   return (
     <>
-      <header className="page__header">
+      <header className="page__header auth-page__header">
         <h1>Connexion</h1>
         <p>Content de te revoir.</p>
       </header>
