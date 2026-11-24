@@ -47,7 +47,7 @@ export default function Register() {
 
   return (
     <>
-      <header className="page__header">
+      <header className="page__header auth-page__header">
         <h1>Inscription</h1>
         <p>Crée ton compte pour rejoindre des événements.</p>
       </header>
