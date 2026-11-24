@@ -27,11 +27,26 @@ export default function Profile() {
       </header>
 
       <Card as="section" className="profile">
-        <dl>
-          <dt>Login</dt>
-          <dd>{user.login}</dd>
-          <dt>Email</dt>
-          <dd>{user.email}</dd>
+        <div className="profile__heading">
+          <span className="profile__avatar" aria-hidden="true">
+            {user.login.trim().charAt(0).toUpperCase()}
+          </span>
+          <div>
+            <p className="profile__eyebrow">Espace joueur</p>
+            <h2>{user.login}</h2>
+            <p className="profile__subtitle">Votre compte iSport</p>
+          </div>
+        </div>
+
+        <dl className="profile__details">
+          <div className="profile__detail">
+            <dt>Nom d'utilisateur</dt>
+            <dd>{user.login}</dd>
+          </div>
+          <div className="profile__detail">
+            <dt>Adresse e-mail</dt>
+            <dd>{user.email}</dd>
+          </div>
         </dl>
       </Card>
     </>
