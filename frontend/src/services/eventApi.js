@@ -1,10 +1,9 @@
 
 import { getToken } from "./api.js";
 
-// Données de test pour la création, l'inscription et la désinscription,
-// tant que ces routes n'existent pas encore côté back.
+// Données de test utilisées lorsque USE_MOCK est activé.
 // La liste des événements (avec le filtre par sport) utilise déjà le vrai back.
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 // ======================================
 // 1. LES EVENEMENTS DE TEST
