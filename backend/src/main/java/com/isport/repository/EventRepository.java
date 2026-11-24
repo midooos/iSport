@@ -2,8 +2,11 @@ package com.isport.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,6 +14,10 @@ import org.springframework.data.repository.query.Param;
 import com.isport.entity.Event;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select e from Event e where e.id = :id")
+    Optional<Event> findByIdForUpdate(@Param("id") Long id);
 
     // Une seule requête SQL par appel :
     // - l'organisateur est lu par jointure

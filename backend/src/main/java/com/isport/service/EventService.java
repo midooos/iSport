@@ -51,7 +51,7 @@ public class EventService {
 
     @Transactional
     public EventResponse join(Long eventId, Long currentUserId) {
-        Event event = eventRepository.findById(eventId)
+        Event event = eventRepository.findByIdForUpdate(eventId)
             .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Événement introuvable"));
 
         if (event.getParticipants().stream().anyMatch(user -> currentUserId.equals(user.getId()))) {
@@ -70,7 +70,7 @@ public class EventService {
 
     @Transactional
     public EventResponse leave(Long eventId, Long currentUserId) {
-        Event event = eventRepository.findById(eventId)
+        Event event = eventRepository.findByIdForUpdate(eventId)
             .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Événement introuvable"));
 
         User participant = event.getParticipants().stream()
