@@ -17,7 +17,8 @@ export default function Navbar() {
       <div className="navbar__inner">
 
         <NavLink to="/" className="navbar__brand">
-          iSport
+          <img src="/favicon.svg?v=2" alt="" />
+          <span>iSport</span>
         </NavLink>
 
         <nav className="navbar__links">
@@ -33,7 +34,7 @@ export default function Navbar() {
         <div className="navbar__auth">
           {user ? (
             <>
-              <NavLink to="/profile">
+              <NavLink to="/profile" className="navbar__profile-link">
                 {user.login}
               </NavLink>
 
