@@ -27,11 +27,25 @@ export default function Profile() {
       </header>
 
       <Card as="section" className="profile">
-        <dl>
-          <dt>Login</dt>
-          <dd>{user.login}</dd>
-          <dt>Email</dt>
-          <dd>{user.email}</dd>
+        <div className="profile__header">
+          <span className="profile__avatar" aria-hidden="true">
+            {user.login.slice(0, 1).toUpperCase()}
+          </span>
+          <div>
+            <h2 className="profile__title">Mon compte</h2>
+            <p className="profile__subtitle">Tes informations personnelles</p>
+          </div>
+        </div>
+
+        <dl className="profile__details">
+          <div className="profile__item">
+            <dt>Nom d'utilisateur</dt>
+            <dd>{user.login}</dd>
+          </div>
+          <div className="profile__item">
+            <dt>Email</dt>
+            <dd>{user.email}</dd>
+          </div>
         </dl>
       </Card>
     </>
