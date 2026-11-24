@@ -49,6 +49,39 @@ public class EventService {
         return EventResponse.from(eventRepository.save(event), currentUserId);
     }
 
+    @Transactional
+    public EventResponse join(Long eventId, Long currentUserId) {
+        Event event = eventRepository.findById(eventId)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Événement introuvable"));
+
+        if (event.getParticipants().stream().anyMatch(user -> currentUserId.equals(user.getId()))) {
+            throw new ApiException(HttpStatus.CONFLICT, "Vous participez déjà à cet événement");
+        }
+        if (event.getParticipants().size() >= event.getMaxParticipants()) {
+            throw new ApiException(HttpStatus.CONFLICT, "L'événement est complet");
+        }
+
+        User user = userRepository.findById(currentUserId)
+            .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Vous devez être connecté"));
+        event.getParticipants().add(user);
+
+        return EventResponse.from(event, currentUserId);
+    }
+
+    @Transactional
+    public EventResponse leave(Long eventId, Long currentUserId) {
+        Event event = eventRepository.findById(eventId)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Événement introuvable"));
+
+        User participant = event.getParticipants().stream()
+            .filter(user -> currentUserId.equals(user.getId()))
+            .findFirst()
+            .orElseThrow(() -> new ApiException(HttpStatus.CONFLICT, "Vous ne participez pas à cet événement"));
+        event.getParticipants().remove(participant);
+
+        return EventResponse.from(event, currentUserId);
+    }
+
     // US-06 et US-15 : événements à venir, éventuellement filtrés par sport
     @Transactional(readOnly = true)
     public List<EventResponse> findUpcoming(String sport, Long currentUserId) {
