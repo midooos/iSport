@@ -41,9 +41,9 @@ export default function Login() {
   };
 
   return (
-    <>
+    <section className="auth-page" aria-labelledby="login-title">
       <header className="page__header auth-page__header">
-        <h1>Connexion</h1>
+        <h1 id="login-title">Connexion</h1>
         <p>Content de te revoir.</p>
       </header>
 
@@ -70,6 +70,6 @@ export default function Login() {
       <p className="auth-switch">
         Pas encore de compte ? <Link to="/register">S'inscrire</Link>
       </p>
-    </>
+    </section>
   );
 }
