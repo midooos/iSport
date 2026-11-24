@@ -424,6 +424,12 @@ a {
   font-weight: 800;
 }
 
+.profile__avatar svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  fill: currentColor;
+}
+
 .profile__title {
   font-size: 1.25rem;
 }
