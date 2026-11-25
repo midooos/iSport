@@ -369,6 +369,13 @@ a {
 
 .dashboard__toolbar .search {
   margin-bottom: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.dashboard__toolbar .search select {
+  background: transparent;
 }
 
 .dashboard__list-heading h2 {
