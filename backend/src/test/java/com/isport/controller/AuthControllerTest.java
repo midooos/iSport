@@ -95,6 +95,17 @@ class AuthControllerTest {
     }
 
     @Test
+    void nomUtilisateurDejaUtiliseRenvoie409() throws Exception {
+        String s = uniqueSuffix();
+        register("dup" + s, "first" + s + "@mail.com", "motdepasse1");
+        mockMvc.perform(post("/api/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(registerJson("dup" + s, "second" + s + "@mail.com", "motdepasse1", "motdepasse1")))
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.message").value("Ce nom d'utilisateur est déjà utilisé"));
+    }
+
+    @Test
     void connexionValideRenvoieUnToken() throws Exception {
         String s = uniqueSuffix();
         register("log" + s, "log" + s + "@mail.com", "motdepasse1");

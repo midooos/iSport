@@ -37,6 +37,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> handleConflict(DataIntegrityViolationException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-            .body(Map.of("message", "Cet email ou ce login est déjà utilisé"));
+            .body(Map.of("message", "Cet email ou ce nom d'utilisateur est déjà utilisé"));
     }
 }
