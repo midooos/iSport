@@ -1,9 +1,56 @@
 
 const TOKEN_KEY = "isport_token";
 
+function apiError(message, status) {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+}
+
+async function requestApi(url, options) {
+  try {
+    return await fetch(url, options);
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error("Impossible de joindre le serveur. Vérifiez que le backend est démarré.");
+    }
+    throw error;
+  }
+}
+
+async function readJsonResponse(response, fallbackMessage) {
+  const text = await response.text();
+  let data = null;
+
+  if (text.trim()) {
+    try {
+      data = JSON.parse(text);
+    } catch (error) {
+      if (!(error instanceof SyntaxError)) throw error;
+      const message = response.status >= 500
+        ? `Le serveur est indisponible (HTTP ${response.status}). Vérifiez que le backend est démarré.`
+        : "La réponse du serveur est invalide.";
+      throw apiError(message, response.status);
+    }
+  }
+
+  if (!response.ok) {
+    const message = data?.message || (response.status >= 500
+      ? `Le serveur est indisponible (HTTP ${response.status}). Vérifiez que le backend est démarré.`
+      : fallbackMessage);
+    throw apiError(message, response.status);
+  }
+
+  if (data === null || typeof data !== "object") {
+    throw apiError("La réponse du serveur est vide ou invalide.", response.status);
+  }
+
+  return data;
+}
+
 // Vérifier si le backend répond
 export async function getHealth() {
-  const response = await fetch("/api/health");
+  const response = await requestApi("/api/health");
 
   if (!response.ok) {
     throw new Error("Le back ne répond pas");
@@ -41,7 +88,7 @@ export function clearToken() {
 
 // Connexion
 export async function login({ email, password }) {
-  const response = await fetch("/api/auth/login", {
+  const response = await requestApi("/api/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -49,18 +96,12 @@ export async function login({ email, password }) {
     body: JSON.stringify({ email, password }),
   });
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Erreur lors de la connexion");
-  }
-
-  return data;
+  return readJsonResponse(response, "Erreur lors de la connexion");
 }
 
 // Inscription
 export async function register({ login, email, password, confirmPassword }) {
-  const response = await fetch("/api/auth/register", {
+  const response = await requestApi("/api/auth/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -68,33 +109,17 @@ export async function register({ login, email, password, confirmPassword }) {
     body: JSON.stringify({ login, email, password, confirmPassword }),
   });
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Erreur lors de l'inscription");
-  }
-
-  return data;
+  return readJsonResponse(response, "Erreur lors de l'inscription");
 }
 
 // Récupérer le profil de l'utilisateur connecté
 export async function getMe() {
-  const response = await fetch("/api/users/me", {
+  const response = await requestApi("/api/users/me", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },
   });
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    const error = new Error(
-      data.message || "Impossible de récupérer le profil"
-    );
-    error.status = response.status;
-    throw error;
-  }
-
-  return data;
+  return readJsonResponse(response, "Impossible de récupérer le profil");
 }
