@@ -41,47 +41,35 @@ export default function Login() {
   };
 
   return (
-    <section className="auth-page">
-      <div className="auth-page__form">
-        <header className="page__header">
-          <span className="auth-page__eyebrow">Ravi de vous revoir</span>
-          <h1>Connexion</h1>
-          <p>Retrouvez votre prochain rendez-vous sportif.</p>
-        </header>
+    <section className="auth-page" aria-labelledby="login-title">
+      <header className="page__header auth-page__header">
+        <h1 id="login-title">Connexion</h1>
+        <p>Content de te revoir.</p>
+      </header>
 
-        <form className="form" onSubmit={handleSubmit} noValidate>
-          {message && (
-            <p className="notice" role="status">
-              {message}
-            </p>
-          )}
-          {serverError && (
-            <p className="field__error" role="alert">
-              {serverError}
-            </p>
-          )}
+      <form className="form" onSubmit={handleSubmit} noValidate>
+        {message && (
+          <p className="notice" role="status">
+            {message}
+          </p>
+        )}
+        {serverError && (
+          <p className="field__error" role="alert">
+            {serverError}
+          </p>
+        )}
 
-          <Input label="Email" id="email" name="email" type="email" value={values.email} onChange={handleChange} error={errors.email} autoComplete="email" />
-          <Input label="Mot de passe" id="password" name="password" type="password" value={values.password} onChange={handleChange} error={errors.password} autoComplete="current-password" />
+        <Input label="Email" id="email" name="email" type="email" value={values.email} onChange={handleChange} error={errors.email} autoComplete="email" />
+        <Input label="Mot de passe" id="password" name="password" type="password" value={values.password} onChange={handleChange} error={errors.password} autoComplete="current-password" />
 
-          <Button type="submit" disabled={loading}>
-            {loading ? "Connexion…" : "Se connecter"}
-          </Button>
-        </form>
+        <Button type="submit" disabled={loading}>
+          {loading ? "Connexion…" : "Se connecter"}
+        </Button>
+      </form>
 
-        <p className="auth-switch">
-          Pas encore de compte ? <Link to="/register">S'inscrire</Link>
-        </p>
-      </div>
-
-      <aside className="auth-page__aside">
-        <span className="auth-page__aside-label">iSport · Le sport en bonne compagnie</span>
-        <p className="auth-page__aside-title">Le prochain match commence par une rencontre.</p>
-        <div className="auth-court" aria-hidden="true">
-          <span className="auth-court__ball" />
-        </div>
-        <p className="auth-page__aside-note">Trouvez des joueurs, choisissez un terrain, et c'est parti.</p>
-      </aside>
+      <p className="auth-switch">
+        Pas encore de compte ? <Link to="/register">S'inscrire</Link>
+      </p>
     </section>
   );
 }

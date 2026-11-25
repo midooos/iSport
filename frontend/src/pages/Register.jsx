@@ -46,44 +46,32 @@ export default function Register() {
   };
 
   return (
-    <section className="auth-page">
-      <div className="auth-page__form">
-        <header className="page__header">
-          <span className="auth-page__eyebrow">Bienvenue dans l'équipe</span>
-          <h1>Inscription</h1>
-          <p>Créez votre compte et trouvez votre prochain match.</p>
-        </header>
+    <section className="auth-page" aria-labelledby="register-title">
+      <header className="page__header auth-page__header">
+        <h1 id="register-title">Inscription</h1>
+        <p>Crée ton compte pour rejoindre des événements.</p>
+      </header>
 
-        <form className="form" onSubmit={handleSubmit} noValidate>
-          {serverError && (
-            <p className="field__error" role="alert">
-              {serverError}
-            </p>
-          )}
+      <form className="form" onSubmit={handleSubmit} noValidate>
+        {serverError && (
+          <p className="field__error" role="alert">
+            {serverError}
+          </p>
+        )}
 
-          <Input label="Nom d'utilisateur" id="login" name="login" value={values.login} onChange={handleChange} error={errors.login} autoComplete="username" />
-          <Input label="Email" id="email" name="email" type="email" value={values.email} onChange={handleChange} error={errors.email} autoComplete="email" />
-          <Input label="Mot de passe" id="password" name="password" type="password" value={values.password} onChange={handleChange} error={errors.password} hint="8 caractères minimum." autoComplete="new-password" />
-          <Input label="Confirmer le mot de passe" id="confirmPassword" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleChange} error={errors.confirmPassword} autoComplete="new-password" />
+        <Input label="Nom d'utilisateur" id="login" name="login" value={values.login} onChange={handleChange} error={errors.login} autoComplete="username" />
+        <Input label="Email" id="email" name="email" type="email" value={values.email} onChange={handleChange} error={errors.email} autoComplete="email" />
+        <Input label="Mot de passe" id="password" name="password" type="password" value={values.password} onChange={handleChange} error={errors.password} hint="8 caractères minimum." autoComplete="new-password" />
+        <Input label="Confirmer le mot de passe" id="confirmPassword" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleChange} error={errors.confirmPassword} autoComplete="new-password" />
 
-          <Button type="submit" disabled={loading}>
-            {loading ? "Création du compte…" : "S'inscrire"}
-          </Button>
-        </form>
+        <Button type="submit" disabled={loading}>
+          {loading ? "Création du compte…" : "S'inscrire"}
+        </Button>
+      </form>
 
-        <p className="auth-switch">
-          Tu as déjà un compte ? <Link to="/login">Se connecter</Link>
-        </p>
-      </div>
-
-      <aside className="auth-page__aside">
-        <span className="auth-page__aside-label">iSport · Le sport en bonne compagnie</span>
-        <p className="auth-page__aside-title">Un terrain, quelques joueurs, et une bonne histoire à raconter.</p>
-        <div className="auth-court" aria-hidden="true">
-          <span className="auth-court__ball" />
-        </div>
-        <p className="auth-page__aside-note">Les meilleures équipes commencent souvent par un simple bonjour.</p>
-      </aside>
+      <p className="auth-switch">
+        Tu as déjà un compte ? <Link to="/login">Se connecter</Link>
+      </p>
     </section>
   );
 }

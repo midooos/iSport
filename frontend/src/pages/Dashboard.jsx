@@ -4,6 +4,7 @@ import Card from "../components/Card.jsx";
 import Badge from "../components/Badge.jsx";
 import Input from "../components/Input.jsx";
 import Button from "../components/Button.jsx";
+import { useAuth } from "../context/useAuth.js";
 
 
 
@@ -157,6 +158,7 @@ function EventCard(props) {
 
 function Dashboard() {
 
+    const { user } = useAuth();
 
     // Les événements
     const [events, setEvents] = useState([]);
@@ -184,6 +186,10 @@ function Dashboard() {
     // Rechargé à chaque changement de sport : le filtre est fait par le back
     // (GET /api/events?sport=...)
     useEffect(function() {
+
+        if (!user) {
+            return;
+        }
 
         // Si l'utilisateur change de sport avant la fin du chargement,
         // on ignore l'ancienne réponse pour ne pas afficher la mauvaise liste
@@ -226,7 +232,7 @@ function Dashboard() {
             ignore = true;
         };
 
-    }, [sport]);
+    }, [sport, user]);
 
 
     // Vérifier si un sport est choisi
@@ -310,6 +316,46 @@ function Dashboard() {
 
     }
 
+    if (!user) {
+        return (
+            <section className="guest-home" aria-labelledby="guest-home-title">
+                <div className="guest-home__intro">
+                    <p className="guest-home__eyebrow">iSport · rencontres locales</p>
+                    <h1 id="guest-home-title">Trouve ta prochaine partie.</h1>
+                    <p className="guest-home__description">
+                        Rejoins une rencontre près de chez toi, ou propose la tienne.
+                    </p>
+                    <div className="guest-home__actions">
+                        <Link className="guest-home__primary" to="/register">
+                            Créer un compte
+                        </Link>
+                        <Link className="guest-home__login" to="/login">
+                            J’ai déjà un compte
+                        </Link>
+                    </div>
+                </div>
+
+                <aside className="guest-home__guide" aria-labelledby="guest-home-guide-title">
+                    <h2 id="guest-home-guide-title">Pour commencer</h2>
+                    <ol>
+                        <li>
+                            <span>01</span>
+                            <p>Crée ton compte iSport.</p>
+                        </li>
+                        <li>
+                            <span>02</span>
+                            <p>Choisis une rencontre et vérifie les places.</p>
+                        </li>
+                        <li>
+                            <span>03</span>
+                            <p>Rejoins le groupe et rendez-vous sur le terrain.</p>
+                        </li>
+                    </ol>
+                </aside>
+            </section>
+        );
+    }
+
 
     // ======================================
     // 8. AFFICHAGE DE LA PAGE
@@ -319,53 +365,65 @@ function Dashboard() {
 
         <>
 
-            <header className="page__header">
+            <header className="page__header dashboard__header">
+                <div>
+                    <p className="dashboard__eyebrow">iSport · rencontres locales</p>
+                    <h1>On joue ?</h1>
+                    <p>Des matchs proposés par les joueurs près de chez vous.</p>
+                </div>
 
-                <h1>Événements à venir</h1>
-
-                <p>
-                    Choisis un match près de chez toi.
-                </p>
-
+                <Link className="dashboard__create" to="/events/new">
+                    Proposer une rencontre
+                </Link>
             </header>
 
 
-            {/* Filtre par sport */}
+            <div className="dashboard__toolbar">
+                <div className="dashboard__list-heading">
+                    <h2>Les prochaines rencontres</h2>
+                    {status === "ready" && (
+                        <p>
+                            {events.length} {events.length === 1 ? "événement" : "événements"}
+                            {isFiltering === true ? " · " + sport : ""}
+                        </p>
+                    )}
+                </div>
 
-            <div className="search">
+                <div className="search">
 
-                <Input
-                    as="select"
-                    label="Filtrer par sport"
-                    id="sport-filter"
-                    name="sport"
-                    value={sport}
-                    onChange={function(event) {
-                        setSport(event.target.value);
-                    }}
-                >
+                    <Input
+                        as="select"
+                        label="Filtrer par sport"
+                        id="sport-filter"
+                        name="sport"
+                        value={sport}
+                        onChange={function(event) {
+                            setSport(event.target.value);
+                        }}
+                    >
 
-                    <option value="">
-                        Tous les sports
-                    </option>
+                        <option value="">
+                            Tous les sports
+                        </option>
 
-                    {SPORTS.map(function(sportName) {
+                        {SPORTS.map(function(sportName) {
 
-                        return (
+                            return (
 
-                            <option
-                                key={sportName}
-                                value={sportName}
-                            >
-                                {sportName}
-                            </option>
+                                <option
+                                    key={sportName}
+                                    value={sportName}
+                                >
+                                    {sportName}
+                                </option>
 
-                        );
+                            );
 
-                    })}
+                        })}
 
-                </Input>
+                    </Input>
 
+                </div>
             </div>
 
 
@@ -447,21 +505,6 @@ function Dashboard() {
             {status === "ready" && events.length > 0 && (
 
                 <>
-
-                    <p className="search__count">
-
-                        {events.length}
-
-                        {events.length > 1
-                            ? " événements"
-                            : " événement"}
-
-                        {isFiltering === true
-                            ? " pour " + sport
-                            : ""}
-
-                    </p>
-
 
                     {/* Afficher les cartes */}
 
