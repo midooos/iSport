@@ -38,7 +38,7 @@ public class AuthService {
             throw new ApiException(HttpStatus.CONFLICT, "Cet email est déjà utilisé");
         }
         if (userRepository.existsByLogin(login)) {
-            throw new ApiException(HttpStatus.CONFLICT, "Ce login est déjà utilisé");
+            throw new ApiException(HttpStatus.CONFLICT, "Ce nom d'utilisateur est déjà utilisé");
         }
 
         User user = new User(login, email, passwordEncoder.encode(request.password()));

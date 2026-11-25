@@ -55,7 +55,7 @@ Règles de validation : email valide, mot de passe de 8 caractères minimum, con
 
 - `201` : `{ "id": 3, "login": "mohamed", "email": "mohamed@mail.com" }`
 - `400` : un champ est invalide (le message dit lequel)
-- `409` : email ou login déjà utilisé
+- `409` : email ou nom d'utilisateur déjà utilisé
 
 ### POST /api/auth/login (public) : US-03
 
