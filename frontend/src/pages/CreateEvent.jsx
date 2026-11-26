@@ -153,7 +153,7 @@ function CreateEvent() {
 
     return (
 
-        <div>
+        <div className="create-event-page">
 
             <header className="page__header">
 
