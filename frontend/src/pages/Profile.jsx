@@ -43,7 +43,7 @@ export default function Profile() {
   }, [logout, navigate]);
 
   return (
-    <>
+    <div className="profile-page">
       <header className="page__header">
         <h1>Mon profil</h1>
         <p>Les informations de ton compte.</p>
@@ -90,6 +90,6 @@ export default function Profile() {
           </div>
         </div>
       </Card>
-    </>
+    </div>
   );
 }
